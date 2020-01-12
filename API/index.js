@@ -4,6 +4,7 @@ const database = require('./services/database.js');
 const bodyParser = require('body-parser');
 
 const areaRoutes = require('./controllers/area');
+const accountRoutes = require('./controllers/account');
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use('/area', areaRoutes);
+app.use('/account', accountRoutes);
 
 
 if(process.env.NODE_ENV !== 'test'){
