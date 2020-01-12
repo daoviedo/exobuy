@@ -28,7 +28,8 @@ function simpleExecute(statement, binds = [], opts = {}) {
 
       resolve(result);
     } catch (err) {
-      reject(err);
+      resolve(err);
+      //reject(err);
     } finally {
       if (conn) { // conn assignment worked, need to close
         try {
