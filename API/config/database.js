@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config();
 //Database connection credentials
 module.exports = {
   hrPool: {
