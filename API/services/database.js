@@ -28,6 +28,7 @@ function simpleExecute(statement, binds = [], opts = {}) {
 
       resolve(result);
     } catch (err) {
+      console.log(err)
       resolve(err);
       //reject(err);
     } finally {
