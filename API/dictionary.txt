@@ -1,0 +1,97 @@
+RUTAS ACCOUNT
+    -Ruta de Login
+        /account/login
+            [POST]
+
+            Body:
+                {
+                    "email": string
+                    "password": string
+                }
+                
+            Retorno:
+                (200):
+                    {
+                        "statusCode": 1,
+                        "token": string,
+                        "message": "Successfully Logged in"
+                    }
+                (401):
+                    {
+                        "statusCode": 0,
+                        "message": "Failed to login, incorrect credentials"
+                    }
+
+    -Ruta de Registracion
+        /account/register
+            [POST]
+
+            Body:
+                {
+                    "nombre1" = string
+                    "nombre2" = string
+                    "apellido1" = string
+                    "apellido2" = string
+                    "email" = string
+                    "password" = string
+                }
+                
+            Retorno:
+                (201):
+                    {
+                        "statusCode": 1,
+                        "message": "Account successfully created"
+                    }
+                (409):
+                    {
+                        "statusCode": 0,
+                        "message": "Email in use/other error"
+                    }
+    
+    -Ruta de Activar Codigo Email
+        /account/activate/{key}
+            [PATCH]
+                
+            Retorno:
+                (200):
+                    {
+                        "statusCode": 1,
+                        "message": "Activated successfully"
+                    }
+                (404):
+                    {
+                        "statusCode": 0,
+                        "message": "Activation code expired/does not exist"
+                    }
+                    
+RUTAS VERIFICACION
+    -Ruta para revisar token
+        /verify/token
+            [GET]
+
+            Headers:
+                "Authorization": "Bearer ..."
+
+            Retorno:
+                (200):
+                    {
+                        "authentication": true
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+
+    -Ruta para revisar si ha verificado email
+        /verify/email
+            [GET]
+
+            Headers:
+                "Authorization": "Bearer ..."
+
+            Retorno:
+                (200):
+                    {
+                        "active": integer  // 0 - no activado
+                    }                     // 1 - activado
+       
