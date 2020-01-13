@@ -1,0 +1,8 @@
+API
+    DONE - Route to extract user data from USUARIOS
+    - Send Email with activation code from exobuy email
+    DONE - Route to finish registration after activation
+    - Route to resend activation email
+
+WEBPAGE
+    - Page to activate email

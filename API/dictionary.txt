@@ -48,6 +48,48 @@ RUTAS ACCOUNT
                         "message": "Email in use/other error"
                     }
     
+    -Ruta de Finalizar registracion, despues de activar
+        /account/register
+            [PUT]
+
+            Body:
+                {
+                    "cod_pais": string,
+                    "cod_provincia": integer,
+                    "cod_municipio": integer,
+                    "cod_ciudad": integer,
+                    "cod_tipo_id_usuario": integer,
+                    "id_usuario": string,
+                    "fecha_nac": string  //(MM/DD/YYYY) => ex. "07/21/1980",
+                    "cod_moneda": integer,
+                    "direccion_fisica": string
+                }
+                
+            Retorno:
+                (200):
+                    {
+                        "statusCode": 1,
+                        "message": "Account successfully updated"
+                    }
+                (409):
+                    {
+                        "statusCode": 0,
+                        "message": "Error with data entry"
+                    }
+
+    -Ruta para extract info del user
+        /account/info
+            [GET]
+
+            Headers:
+                "Authorization": "Bearer ..."
+
+            Retorno:
+                (200):
+                    {
+                        "info": object  // {JSON object}
+                    }  
+    
     -Ruta de Activar Codigo Email
         /account/activate/{key}
             [PATCH]

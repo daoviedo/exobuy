@@ -74,6 +74,39 @@ router.post('/register', async (req, res) => {
     }
 });
 
+router.put('/register', checkAuth, async (req, res) => {
+    const userID = req.user.ID;
+
+    const cod_pais = req.body.cod_pais;
+    const cod_provincia = req.body.cod_provincia;
+    const cod_municipio = req.body.cod_municipio;
+    const cod_ciudad = req.body.cod_ciudad;
+
+    const cod_tipo_id_usuario = req.body.cod_tipo_id_usuario;
+    const id_usuario = req.body.id_usuario;
+
+    const fecha_nac = req.body.fecha_nac;
+
+    const cod_moneda = req.body.cod_moneda;
+
+    const direccion_fisica = req.body.direccion_fisica;
+
+    //default COD_TIPO_USUARIO, COD_ROLE, COD_ESTATUS_USUARIO
+    const result = await database.simpleExecute(`UPDATE EXOADM.USUARIOS SET USUARIOS.COD_PAIS='${cod_pais}', USUARIOS.COD_PROVINCIA=${cod_provincia}, USUARIOS.COD_MUNICIPIO=${cod_municipio}, USUARIOS.COD_CIUDAD=${cod_ciudad}, USUARIOS.COD_TIPO_ID_USUARIO=${cod_tipo_id_usuario}, USUARIOS.ID_USUARIO='${id_usuario}', USUARIOS.FECHA_NAC_USUARIO=TO_DATE('${fecha_nac}', 'mm/dd/yyyy'), USUARIOS.COD_MONEDA=${cod_moneda}, USUARIOS.DIRECCION_FISICA='${direccion_fisica}', USUARIOS.COD_TIPO_USUARIO=2, USUARIOS.COD_ROLE=2, USUARIOS.COD_ESTATUS_USUARIO=1 WHERE USUARIOS.COD_USUARIO=${userID}`);
+    if(result.hasOwnProperty('errorNum')){
+        res.status(409).json({
+            statusCode: 0,
+            message: "Error with data entry"
+        })
+    }
+    else{
+        res.status(200).json({
+            statusCode: 1,
+            message: "Account successfully updated"
+        })
+    }
+});
+
 //Route to activate email
 router.patch('/activate/:actKey', async (req, res) => {
     const actKey = req.params.actKey;
@@ -92,5 +125,14 @@ router.patch('/activate/:actKey', async (req, res) => {
         })
     }
 });
+
+//Route to get account information
+router.get('/info', checkAuth, async (req, res) => {
+    const userID = req.user.ID;
+    const response = await database.simpleExecute(`SELECT * FROM EXOADM.USUARIOS WHERE USUARIOS.COD_USUARIO=${userID}`);
+    res.status(200).json({
+        info: response.rows[0]
+    })
+})
 
 module.exports = router;
