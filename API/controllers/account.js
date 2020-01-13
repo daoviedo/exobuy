@@ -75,7 +75,7 @@ router.post('/register', async (req, res) => {
 });
 
 //Route to activate email
-router.get('/activate/:actKey', async (req, res) => {
+router.patch('/activate/:actKey', async (req, res) => {
     const actKey = req.params.actKey;
     
     const result = await database.simpleExecute(`UPDATE OAUTH.USERS SET USERS.ACTIVE=1, USERS.ACTIVATION_TOKEN='', USERS.EMAIL_VERIFIED_AT=CURRENT_TIMESTAMP, USERS.UPDATED_AT=CURRENT_TIMESTAMP WHERE USERS.ACTIVATION_TOKEN='${actKey}'`);
