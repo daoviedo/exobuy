@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/municipios', async (req, res) => {
     const result = await database.simpleExecute('SELECT * FROM EXOADM.MUNICIPIOS');
     return res.json({
-    data: result.rows
+        data: result.rows
     })
 });
 
@@ -14,7 +14,7 @@ router.get('/municipios', async (req, res) => {
 router.get('/ciudades', async (req, res) => {
     const result = await database.simpleExecute('SELECT * FROM EXOADM.CIUDADES');
     return res.json({
-    data: result.rows
+        data: result.rows
     })
 });
     
@@ -22,7 +22,7 @@ router.get('/ciudades', async (req, res) => {
 router.get('/paises', async (req, res) => {
     const result = await database.simpleExecute('SELECT * FROM EXOADM.PAISES');
     return res.json({
-    data: result.rows
+        data: result.rows
     })
 });
     
@@ -30,7 +30,7 @@ router.get('/paises', async (req, res) => {
 router.get('/provincias', async (req, res) => {
     const result = await database.simpleExecute('SELECT * FROM EXOADM.PROVINCIAS');
     return res.json({
-    data: result.rows
+        data: result.rows
     })
 });
 

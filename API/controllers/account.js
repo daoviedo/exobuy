@@ -4,9 +4,10 @@ const express = require('express');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const checkAuth = require('../middleware/checkAuth');
 const router = express.Router();
 
-//route to get all municipalities
+//Login Route
 router.post('/login', async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -26,7 +27,6 @@ router.post('/login', async (req, res) => {
                 ID: findAccount.rows[0].ID,
                 name: findAccount.rows[0].NOMBRE_01_USUARIO,
                 email: findAccount.rows[0].EMAIL,
-                active: findAccount.rows[0].ACTIVE
             }
             const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
             res.status(200).json({
@@ -46,6 +46,7 @@ router.post('/login', async (req, res) => {
     
 });
 
+//Initial Registration Route
 router.post('/register', async (req, res) => {
     const nombre1 = req.body.nombre1;
     const nombre2 = req.body.nombre2;
@@ -73,6 +74,7 @@ router.post('/register', async (req, res) => {
     }
 });
 
+//Route to activate email
 router.get('/activate/:actKey', async (req, res) => {
     const actKey = req.params.actKey;
     

@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 
 const areaRoutes = require('./controllers/area');
 const accountRoutes = require('./controllers/account');
+const verificationRoutes = require('./controllers/verification');
 
 const app = express();
 
@@ -26,8 +27,10 @@ startup();
 app.use(cors());
 app.use(bodyParser.json());
 
+//Controllers
 app.use('/area', areaRoutes);
 app.use('/account', accountRoutes);
+app.use('/verify', verificationRoutes);
 
 
 if(process.env.NODE_ENV !== 'test'){
