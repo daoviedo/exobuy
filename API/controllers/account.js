@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const checkAuth = require('../middleware/checkAuth');
+const transporter = require('../services/email.js')
 const router = express.Router();
 
 //Login Route
@@ -67,10 +68,23 @@ router.post('/register', async (req, res) => {
         })
     }
     else{
-        res.status(201).json({
-            statusCode: 1,
-            message: "Account successfully created"
-        })
+        const emailmessage = {
+            from: 'api@myexobuy.com', // Sender address
+            to: 'daniel.a2006@hotmail.com',         // List of recipients
+            subject: 'Activate your account', // Subject line
+            text: 'Thank you for registering, please click the link below to activate your account\n' + activationKey // Plain text body
+        };
+        transporter.sendMail(emailmessage, function(err, info) {
+            if (err) {
+              console.log(err)
+            } else {
+              //console.log(info);
+              res.status(201).json({
+                statusCode: 1,
+                message: "Account successfully created"
+            })
+            }
+        });
     }
 });
 
