@@ -72,7 +72,7 @@ router.post('/register', async (req, res) => {
             from: 'api@myexobuy.com', // Sender address
             to: 'daniel.a2006@hotmail.com',         // List of recipients
             subject: 'Activate your account', // Subject line
-            text: 'Thank you for registering, please click the link below to activate your account\n' + activationKey // Plain text body
+            text: 'Thank you for registering, please click the link below to activate your account\n' + 'http://localhost:3000/activate?key=' + activationKey // Plain text body
         };
         transporter.sendMail(emailmessage, function(err, info) {
             if (err) {
