@@ -78,7 +78,7 @@ router.post('/register', async (req, res) => {
             if (err) {
                 res.status(400).json({
                     statusCode: 0,
-                    message: "email does not exist/something went wrong with email process"
+                    message: "Email does not exist/is not a valid email"
                 })
             } else {
                 //console.log(info);
@@ -148,14 +148,14 @@ router.get('/resend', async (req, res) => {
     const email = req.query.email;
     const result = await database.simpleExecute(`SELECT USERS.ACTIVATION_TOKEN FROM OAUTH.USERS WHERE USERS.EMAIL='${email}'`);
     if(result.rows.length === 0){
-        res.status(202).json({
+        res.status(404).json({
             statusCode: 0,
             message: "email not found"
         })
     }
     else{
         if(result.rows[0].ACTIVATION_TOKEN === null){
-            res.status(202).json({
+            res.status(409).json({
                 statusCode: 0,
                 message: "email already activated"
             })
@@ -169,7 +169,7 @@ router.get('/resend', async (req, res) => {
             };
             transporter.sendMail(emailmessage, function(err, info) {
                 if (err) {
-                    res.status(400).json({
+                    res.status(500).json({
                         statusCode: 0,
                         message: "something went wrong with email process"
                     })

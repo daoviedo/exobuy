@@ -42,6 +42,11 @@ RUTAS ACCOUNT
                         "statusCode": 1,
                         "message": "Account successfully created"
                     }
+                (400):
+                    {
+                        "statusCode": 0,
+                        "message": "Email does not exist/is not a valid email"
+                    }
                 (409):
                     {
                         "statusCode": 0,
@@ -104,6 +109,31 @@ RUTAS ACCOUNT
                     {
                         "statusCode": 0,
                         "message": "Activation code expired/does not exist"
+                    }
+    -Ruta de resend codigo activacion
+        /account/resend?email={email}
+            [GET]
+                
+            Retorno:
+                (200):
+                    {
+                        "statusCode": 1,
+                        "message": "email resent"
+                    }
+                (404):
+                    {
+                        "statusCode": 0,
+                        "message": "email not found"
+                    }
+                (409):
+                    {
+                        "statusCode": 0,
+                        "message": "email already activated"
+                    }
+                (500):
+                    {
+                        "statusCode": 0,
+                        "message": "something went wrong with email process"
                     }
                     
 RUTAS VERIFICACION
