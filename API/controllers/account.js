@@ -140,6 +140,11 @@ router.patch('/activate/:actKey', async (req, res) => {
     }
 });
 
+//Route to resend email
+router.get('/resend', async (req, res) => {
+    
+});
+
 //Route to get account information
 router.get('/info', checkAuth, async (req, res) => {
     const userID = req.user.ID;
@@ -147,6 +152,6 @@ router.get('/info', checkAuth, async (req, res) => {
     res.status(200).json({
         info: response.rows[0]
     })
-})
+});
 
 module.exports = router;
