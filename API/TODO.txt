@@ -2,7 +2,7 @@ API
     DONE - Route to extract user data from USUARIOS
     DONE - Send Email with activation code from exobuy email
     DONE - Route to finish registration after activation
-    - Route to resend activation email
+    DONE - Route to resend activation email
 
 WEBPAGE
-    - Page to activate email
+    DONE - Page to activate email

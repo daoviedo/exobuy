@@ -70,19 +70,22 @@ router.post('/register', async (req, res) => {
     else{
         const emailmessage = {
             from: 'api@myexobuy.com', // Sender address
-            to: 'daniel.a2006@hotmail.com',         // List of recipients
+            to: email,         // List of recipients
             subject: 'Activate your account', // Subject line
-            text: 'Thank you for registering, please click the link below to activate your account\n' + 'http://localhost:3000/activate?key=' + activationKey // Plain text body
+            text: 'Thank you for registering, please click the link below to activate your account\n' + 'http://localhost:3000/activate?key=' + activationKey
         };
         transporter.sendMail(emailmessage, function(err, info) {
             if (err) {
-              console.log(err)
+                res.status(400).json({
+                    statusCode: 0,
+                    message: "email does not exist/something went wrong with email process"
+                })
             } else {
-              //console.log(info);
-              res.status(201).json({
-                statusCode: 1,
-                message: "Account successfully created"
-            })
+                //console.log(info);
+                res.status(201).json({
+                    statusCode: 1,
+                    message: "Account successfully created"
+                })
             }
         });
     }
@@ -142,7 +145,44 @@ router.patch('/activate/:actKey', async (req, res) => {
 
 //Route to resend email
 router.get('/resend', async (req, res) => {
-    
+    const email = req.query.email;
+    const result = await database.simpleExecute(`SELECT USERS.ACTIVATION_TOKEN FROM OAUTH.USERS WHERE USERS.EMAIL='${email}'`);
+    if(result.rows.length === 0){
+        res.status(202).json({
+            statusCode: 0,
+            message: "email not found"
+        })
+    }
+    else{
+        if(result.rows[0].ACTIVATION_TOKEN === null){
+            res.status(202).json({
+                statusCode: 0,
+                message: "email already activated"
+            })
+        }
+        else{
+            const emailmessage = {
+                from: 'api@myexobuy.com', // Sender address
+                to: email,         // List of recipients
+                subject: 'Activate your account', // Subject line
+                text: 'Thank you for registering, please click the link below to activate your account\n' + 'http://localhost:3000/activate?key=' + result.rows[0].ACTIVATION_TOKEN
+            };
+            transporter.sendMail(emailmessage, function(err, info) {
+                if (err) {
+                    res.status(400).json({
+                        statusCode: 0,
+                        message: "something went wrong with email process"
+                    })
+                } else {
+                    //console.log(info);
+                    res.status(200).json({
+                        statusCode: 1,
+                        message: "email resent"
+                    })
+                }
+            });
+        }
+    }
 });
 
 //Route to get account information
