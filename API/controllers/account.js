@@ -72,10 +72,11 @@ router.post('/register', async (req, res) => {
             from: 'api@myexobuy.com', // Sender address
             to: email,         // List of recipients
             subject: 'Activate your account', // Subject line
-            text: 'Thank you for registering, please click the link below to activate your account\n' + 'http://localhost:3000/activate?key=' + activationKey
+            text: 'Thank you for registering, please click the link below to activate your account\n' + process.env.WEB_ADDRESS + '/activate?key=' + activationKey
         };
         transporter.sendMail(emailmessage, function(err, info) {
             if (err) {
+                console.log(err);
                 res.status(400).json({
                     statusCode: 0,
                     message: "Email does not exist/is not a valid email"
@@ -88,6 +89,7 @@ router.post('/register', async (req, res) => {
                 })
             }
         });
+        
     }
 });
 
@@ -108,8 +110,10 @@ router.put('/register', checkAuth, async (req, res) => {
 
     const direccion_fisica = req.body.direccion_fisica;
 
+    const num_telf = req.body.num_telf;
+
     //default COD_TIPO_USUARIO, COD_ROLE, COD_ESTATUS_USUARIO
-    const result = await database.simpleExecute(`UPDATE EXOADM.USUARIOS SET USUARIOS.COD_PAIS='${cod_pais}', USUARIOS.COD_PROVINCIA=${cod_provincia}, USUARIOS.COD_MUNICIPIO=${cod_municipio}, USUARIOS.COD_CIUDAD=${cod_ciudad}, USUARIOS.COD_TIPO_ID_USUARIO=${cod_tipo_id_usuario}, USUARIOS.ID_USUARIO='${id_usuario}', USUARIOS.FECHA_NAC_USUARIO=TO_DATE('${fecha_nac}', 'mm/dd/yyyy'), USUARIOS.COD_MONEDA=${cod_moneda}, USUARIOS.DIRECCION_FISICA='${direccion_fisica}', USUARIOS.COD_TIPO_USUARIO=2, USUARIOS.COD_ROLE=2, USUARIOS.COD_ESTATUS_USUARIO=1 WHERE USUARIOS.COD_USUARIO=${userID}`);
+    const result = await database.simpleExecute(`UPDATE EXOADM.USUARIOS SET USUARIOS.COD_PAIS='${cod_pais}', USUARIOS.COD_PROVINCIA=${cod_provincia}, USUARIOS.COD_MUNICIPIO=${cod_municipio}, USUARIOS.COD_CIUDAD=${cod_ciudad}, USUARIOS.COD_TIPO_ID_USUARIO=${cod_tipo_id_usuario}, USUARIOS.ID_USUARIO='${id_usuario}', USUARIOS.FECHA_NAC_USUARIO=TO_DATE('${fecha_nac}', 'mm/dd/yyyy'), USUARIOS.COD_MONEDA=${cod_moneda}, USUARIOS.DIRECCION_FISICA='${direccion_fisica}', USUARIOS.COD_TIPO_USUARIO=2, USUARIOS.COD_ROLE=2, USUARIOS.COD_ESTATUS_USUARIO=1, USUARIOS.NUM_TELF_USUARIO='${num_telf}' WHERE USUARIOS.COD_USUARIO=${userID}`);
     if(result.hasOwnProperty('errorNum')){
         res.status(409).json({
             statusCode: 0,
@@ -160,27 +164,32 @@ router.get('/resend', async (req, res) => {
                 message: "email already activated"
             })
         }
+        //problems with this on server
         else{
             const emailmessage = {
                 from: 'api@myexobuy.com', // Sender address
                 to: email,         // List of recipients
                 subject: 'Activate your account', // Subject line
-                text: 'Thank you for registering, please click the link below to activate your account\n' + 'http://localhost:3000/activate?key=' + result.rows[0].ACTIVATION_TOKEN
+                text: 'Thank you for registering, please click the link below to activate your account\n' + process.env.WEB_ADDRESS + '/activate?key=' + result.rows[0].ACTIVATION_TOKEN
             };
             transporter.sendMail(emailmessage, function(err, info) {
-                if (err) {
+                if(err) {
+                    console.log(err);
+                    
                     res.status(500).json({
                         statusCode: 0,
                         message: "something went wrong with email process"
                     })
                 } else {
                     //console.log(info);
+                    
                     res.status(200).json({
                         statusCode: 1,
                         message: "email resent"
                     })
                 }
             });
+            
         }
     }
 });
@@ -191,6 +200,17 @@ router.get('/info', checkAuth, async (req, res) => {
     const response = await database.simpleExecute(`SELECT * FROM EXOADM.USUARIOS WHERE USUARIOS.COD_USUARIO=${userID}`);
     res.status(200).json({
         info: response.rows[0]
+    })
+});
+
+router.get('/socket', checkAuth, async (req, res) => {
+    const userID = req.user.ID;
+    const token = jwt.sign({ID: userID}, process.env.SOCKET_TOKEN, {expiresIn: "2 seconds"});
+
+    const response = await database.simpleExecute(`UPDATE EXOSTO.CART SET CART.SESSION_TOKEN='${token}' WHERE CART.USER_ID=${userID} AND CART.CART_ACTIVE=1`);
+    res.status(200).json({
+        token: token,
+        info: response
     })
 });
 
