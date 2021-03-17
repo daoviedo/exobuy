@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:600,700&display=swap');
+.logo{
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-top: -32%;
+    margin-bottom: 0px;
+    width: 10.5%;
+    height: auto;
+}
+
+.banner2{
+    
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 63px;
+    display: block;
+    width: 60%;
+    height: auto;
+}
+
+.banner1{
+    
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0px;
+    display: block;
+    width: 40%;
+    height: auto;
+}
+
+.b2{
+    width: 100%;
+    background: #05a468;
+}
+
+.b1{
+    width: 100%;
+    background: #07ba78;
+}
+
+.space{
+    margin-top: 21.5%;
+    width: 100%;
+    height: 600px;
+}

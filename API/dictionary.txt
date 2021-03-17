@@ -1,0 +1,677 @@
+RUTAS ACCOUNT
+    -Ruta de Login
+        /account/login
+            [POST]
+
+            Body:
+                {
+                    "email": string
+                    "password": string
+                }
+                
+            Retorno:
+                (200):
+                    {
+                        "statusCode": 1,
+                        "token": string,
+                        "message": "Successfully Logged in"
+                    }
+                (401):
+                    {
+                        "statusCode": 0,
+                        "message": "Failed to login, incorrect credentials"
+                    }
+
+    -Ruta de Registracion
+        /account/register
+            [POST]
+
+            Body:
+                {
+                    "nombre1": string
+                    "nombre2": string
+                    "apellido1": string
+                    "apellido2": string
+                    "email": string
+                    "password": string
+                }
+                
+            Retorno:
+                (201):
+                    {
+                        "statusCode": 1,
+                        "message": "Account successfully created"
+                    }
+                (400):
+                    {
+                        "statusCode": 0,
+                        "message": "Email does not exist/is not a valid email"
+                    }
+                (409):
+                    {
+                        "statusCode": 0,
+                        "message": "Email in use/other error"
+                    }
+    
+    -Ruta de Finalizar registracion, despues de activar
+        /account/register
+            [PUT]
+
+            Body:
+                {
+                    "cod_pais": string,
+                    "cod_provincia": integer,
+                    "cod_municipio": integer,
+                    "cod_ciudad": integer,
+                    "cod_tipo_id_usuario": integer,
+                    "id_usuario": string,
+                    "fecha_nac": string  //(MM/DD/YYYY) => ex. "07/21/1980",
+                    "cod_moneda": integer,
+                    "direccion_fisica": string,
+                    "num_telf": string
+                }
+                
+            Retorno:
+                (200):
+                    {
+                        "statusCode": 1,
+                        "message": "Account successfully updated"
+                    }
+                (409):
+                    {
+                        "statusCode": 0,
+                        "message": "Error with data entry"
+                    }
+
+    -Ruta para extract info del user
+        /account/info
+            [GET]
+
+            Headers:
+                "Authorization": "Bearer ..."
+
+            Retorno:
+                (200):
+                    {
+                        "info": object  // {JSON object}
+                    }  
+    
+    -Ruta de Activar Codigo Email
+        /account/activate/{key}
+            [PATCH]
+                
+            Retorno:
+                (200):
+                    {
+                        "statusCode": 1,
+                        "message": "Activated successfully"
+                    }
+                (404):
+                    {
+                        "statusCode": 0,
+                        "message": "Activation code expired/does not exist"
+                    }
+    -Ruta de resend codigo activacion
+        /account/resend?email={email}
+            [GET]
+                
+            Retorno:
+                (200):
+                    {
+                        "statusCode": 1,
+                        "message": "email resent"
+                    }
+                (404):
+                    {
+                        "statusCode": 0,
+                        "message": "email not found"
+                    }
+                (409):
+                    {
+                        "statusCode": 0,
+                        "message": "email already activated"
+                    }
+                (500):
+                    {
+                        "statusCode": 0,
+                        "message": "something went wrong with email process"
+                    }
+                    
+RUTAS VERIFICACION
+    -Ruta para revisar token
+        /verify/token
+            [GET]
+
+            Headers:
+                "Authorization": "Bearer ..."
+
+            Retorno:
+                (200):
+                    {
+                        "authentication": true
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+
+    -Ruta para revisar si ha verificado email
+        /verify/email
+            [GET]
+
+            Headers:
+                "Authorization": "Bearer ..."
+
+            Retorno:
+                (200):
+                    {
+                        "active": integer  // 0 - no activado
+                    }                     // 1 - activado
+
+RUTAS DE TIENDA
+    -Ruta para ver todas las tiendas
+        /stores/search
+            [GET]
+
+            Retorno:
+                (200):
+                    {
+                        data: [array de toda la data]
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+
+    -Ruta para ver todas las tiendas con filtro
+        /stores/search/:{filter}
+            [GET]
+
+            Retorno:
+                (200):
+                    {
+                        data: [array de toda la data]
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+    
+    -Ruta para ver todas las tiendas por categoria
+        /stores/search/category/:{categoria}
+            [GET]
+
+            Retorno:
+                (200):
+                    {
+                        data: [array de toda la data]
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+    
+    -Ruta para ver todas las tiendas por categoria con filtro
+        /stores/search/category/:{categoria}/:{filter}
+            [GET]
+
+            Retorno:
+                (200):
+                    {
+                        data: [array de toda la data]
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+
+
+
+    -Ruta para ver todos los tipos de mercados
+        /stores/mercados
+            [GET]
+
+            Retorno:
+                (200):
+                    {
+                        data: [array de toda la data]
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+    
+    -Ruta para crear mercados
+        /stores/mercados
+            [POST]
+
+            Headers:
+                "Authorization": "Bearer ..."
+
+            Body:
+                {
+                    "mercado": string,
+	                "limite_maximo": integer
+                }
+
+            Retorno:
+                (200):
+                    {
+                        "statusCode": 1,
+                        "result": QUERY RESULT / ERRORS
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+    
+
+    -Ruta para ver los detalles de una tienda
+        /stores/details/:{COD_TIENDA}
+            [GET]
+
+            Retorno:
+                (200):
+                    {
+                        data: [array de toda la data]
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+
+
+    -Ruta para crear tienda
+        /stores/create
+            [POST]
+
+            Headers:
+                "Authorization": "Bearer ..."
+
+            Body:
+                {
+                    "nombre_tienda": string,
+	                "cod_mercado": integer,
+	                "direccion": string
+                }
+
+            Retorno:
+                (200):
+                    {
+                        "statusCode": 1,
+                        "result": QUERY RESULT / ERRORS
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+    
+
+
+    -Ruta para crear categorias de productos
+        /stores/categories
+            [POST]
+
+            Headers:
+                "Authorization": "Bearer ..."
+
+            Body:
+                {
+                    "category": string,
+                    "cod_tienda": integer
+                }
+
+            Retorno:
+                (200):
+                    {
+                        "statusCode": 1,
+                        "result": QUERY RESULT / ERRORS
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+
+    -Ruta para ver todas las categorias de una tienda
+        /stores/categories/:{COD_TIENDA}
+            [GET]
+
+            Retorno:
+                (200):
+                    {
+                        data: [array de toda la data]
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+    
+
+
+    -Ruta para ver todas los productos de una tienda
+        /stores/products/:{COD_TIENDA}
+            [GET]
+
+            Retorno:
+                (200):
+                    {
+                        data: [array de toda la data]
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+    
+    -Ruta para ver todas los productos de una tienda con filtro
+        /stores/products/:{COD_TIENDA}/:{filter}
+            [GET]
+
+            Retorno:
+                (200):
+                    {
+                        data: [array de toda la data]
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+
+    -Ruta para ver todas los productos de una tienda de una categoria
+        /stores/products/category/:{COD_TIENDA}/:{COD_CATEGORIA}
+            [GET]
+
+            Retorno:
+                (200):
+                    {
+                        data: [array de toda la data]
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+
+    -Ruta para ver todas los productos de una tienda de una categoria con filtro
+        /stores/products/category/:{COD_TIENDA}/:{COD_CATEGORIA}/:{filtro}
+            [GET]
+
+            Retorno:
+                (200):
+                    {
+                        data: [array de toda la data]
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+
+
+
+    -Ruta para crear productos
+        /stores/products
+            [POST]
+
+            Headers:
+                "Authorization": "Bearer ..."
+
+            Body:
+                {
+                    "producto": string,
+                    "cod_tienda": integer,
+                    "costo_producto": integer,
+                    "peso_producto": integer,
+                    "cantidad": integer,
+                    "cod_categoria_producto": integer,
+                    "cod_barra": string,
+                    "cod_tipo_unidad": integer
+                }
+
+            Retorno:
+                (200):
+                    {
+                        "statusCode": 1,
+                        "result": QUERY RESULT / ERRORS
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+
+
+
+    -Ruta para un vendor que vea una lista de sus tiendas
+        /stores/vendor
+            [GET]
+
+            Headers:
+                "Authorization": "Bearer ..."
+
+            Retorno:
+                (200):
+                    {
+                        data: [array de toda la data]
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+
+RUTAS DE ADMIN
+    -Ruta para cambiar un usuario a vendedor
+        /admin/vendor
+            [POST]
+
+            Headers:
+                "Authorization": "Bearer ..."
+
+            Body:
+                {
+                    "cod_usuario": integer,
+	                "cod_membresia": integer
+                }
+
+            Retorno:
+                (200):
+                    {
+                        "statusCode": 1,
+                        "result": QUERY RESULT / ERRORS
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+
+RUTAS DE CARRITO
+    -Ruta para recibir el active carrito de esa persona
+        /cart
+            [GET]
+
+            Headers:
+                "Authorization": "Bearer ..."
+            
+            Retorno:
+                (200):
+                    {
+                        "cost": FLOAT/DOUBLE, //DECIMAL VALUE ex: 17.34
+                        "cart": [array de toda la data]
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+    
+    -Ruta para recibir el # de items en el carrito
+        /cart/itemcount
+            [GET]
+
+            Headers:
+                "Authorization": "Bearer ..."
+            
+            Retorno:
+                (200):
+                    {
+                        "itemcount": integer
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+    
+    -Ruta para agregar al carrito
+        /cart
+            [POST]
+
+            Headers:
+                "Authorization": "Bearer ..."
+
+            Body:
+                {
+                    "cod_producto": integer,
+                    "cantidad": integer
+                }
+
+            Retorno:
+                (200):
+                    {
+                        "statusCode": 1,
+                        "result": QUERY RESULT / ERRORS
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+
+    -Ruta para modificar in item en el carrito
+        /cart
+            [PATCH]
+
+            Headers:
+                "Authorization": "Bearer ..."
+
+            Body:
+                {
+                    "detail_id": integer,
+                    "cantidad": integer // 0 si lo quire quitar enteramente del carrito
+                }
+
+            Retorno:
+                (200):
+                    {
+                        "statusCode": 1,
+                        "result": QUERY RESULT / ERRORS
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+
+RUTAS DE ORDENES
+    -Ruta para get orders de esa persona
+        /orders
+            [GET]
+
+            Headers:
+                "Authorization": "Bearer ..."
+            
+            Retorno:
+                (200):
+                    {
+                        "data": [array de toda la data]
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+
+    -Ruta para get detalles de una orden
+        /orders/details/:{CART_ID}
+            [GET]
+
+            Headers:
+                "Authorization": "Bearer ..."
+            
+            Retorno:
+                (200):
+                    {
+                        "data": [array de toda la data]
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+
+
+RUTAS DE AREA (GET RUTAS EN EL SWAGGER PAGE)
+    -Ruta para agregar municipio
+        /area/municipios
+            [POST]
+
+            Headers:
+                "Authorization": "Bearer ..."
+
+            Body:
+                {
+                    "municipio": string;
+                    "cod_provincia": integer;
+                    "cod_pais": string;
+                }
+
+            Retorno:
+                (200):
+                    {
+                        "statusCode": 1,
+                        "result": QUERY RESULT / ERRORS
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+
+    -Ruta para agregar ciudad
+        /area/ciudades
+            [POST]
+
+            Headers:
+                "Authorization": "Bearer ..."
+
+            Body:
+                {
+                    "ciudad": string,
+                    "cod_municipio": integer;
+                    "cod_provincia": integer;
+                    "cod_pais": string;
+                }
+
+            Retorno:
+                (200):
+                    {
+                        "statusCode": 1,
+                        "result": QUERY RESULT / ERRORS
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
+
+    -Ruta para agregar provincia
+        /area/provincias
+            [POST]
+
+            Headers:
+                "Authorization": "Bearer ..."
+
+            Body:
+                {
+                    "provincia": string;
+                    "cod_pais": string;
+                }
+
+            Retorno:
+                (200):
+                    {
+                        "statusCode": 1,
+                        "result": QUERY RESULT / ERRORS
+                    }
+                (401):
+                    {
+                        "authentication": false
+                    }
